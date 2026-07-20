@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from app.models.score import Score
 
-
 class StockAnalysis(BaseModel):
 
     ticker: str
@@ -10,5 +9,3 @@ class StockAnalysis(BaseModel):
     market_cap: int | None = None
 
     score: Score
-
-    summary: str
