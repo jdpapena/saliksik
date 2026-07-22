@@ -16,7 +16,7 @@ class Score(BaseModel):
     overall: int
     overall_stars: int
     grade: str
-    recommendation: str
+    assessment: str
 
     strengths: list[str]
     weaknesses: list[str]

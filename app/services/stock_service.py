@@ -47,10 +47,23 @@ def analyze_stock(ticker: str) -> StockAnalysis:
         market_sentiment,
     )
 
+    summary = generate_summary(
+        ticker = stock.ticker,
+        company_name = stock.company_name,
+        score = overall,
+    )
+
+
     return StockAnalysis(
         ticker = stock.ticker,
         company_name = stock.company_name,
-        sector = stock.sector,
+
+        sector = stock.sector,    
+        industry = stock.industry,
+        country = stock.country,
+
         market_cap = stock.market_cap,
+
         score = overall,
+        summary = summary,
     )

@@ -33,7 +33,7 @@ def get_stock_performance(ticker: str) -> StockPerformance:
     history = yf.Ticker(ticker).history(period="5y")
     # Specific timeframes are the most common for evaluating stocks
     return StockPerformance(
-        today = calculate_return_since(history, ONE_DAY),
+        one_day = calculate_return_since(history, ONE_DAY),
         one_week = calculate_return_since(history, ONE_WEEK),
         one_month = calculate_return_since(history, ONE_MONTH),
         six_months = calculate_return_since(history, SIX_MONTHS),

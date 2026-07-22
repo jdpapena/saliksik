@@ -27,7 +27,11 @@ def get_stock_info(ticker: str) -> YahooStock:
         return YahooStock(
             ticker = ticker,
             company_name = info.get("longName"),
+
             sector = info.get("sector"),
+            industry = info.get("industry"),
+            country = info.get("country"),
+
             market_cap = info.get("marketCap"),
             pe_ratio = info.get("trailingPE"),
             beta = info.get("beta"),      
@@ -69,7 +73,7 @@ def get_stock_info(ticker: str) -> YahooStock:
 
             number_of_analyst_opinions = info.get("numberOfAnalystOpinions"),
         )
-    
+        
     except HTTPException:
         raise
 

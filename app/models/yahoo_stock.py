@@ -5,6 +5,9 @@ class YahooStock(BaseModel):
     company_name: str
 
     sector: str | None = None
+    industry: str | None = None
+    country: str | None = None
+
     market_cap: int | None = None
 
     pe_ratio: float | None = None
@@ -22,3 +25,5 @@ class YahooStock(BaseModel):
     recommendation_mean: float | None = None
     recommendation_key: str | None = None
     number_of_analyst_opinions: int | None = None
+
+    
