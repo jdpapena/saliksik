@@ -1,12 +1,12 @@
-"""Application settings loaded from environment variables."""
+"""Application settings for SALIKSIK."""
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
 
-    twelve_data_api_key: str = ""
-
-    # SEC asks automated clients to identify themselves.
-    sec_user_agent: str = "SALIKSIK jeremiah.papena@gmail.com"
+    sec_user_agent: str = (
+        "SALIKSIK jeremiah.papena@gmail.com"
+    )
 
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -11,7 +11,7 @@ from app.models import (
     FinancialSnapshot,
     HistoricalPrice,
     Dividend,
-    News,
+    NewsRecord,
     User,
     InvestorProfile,
     SavedCompany,
