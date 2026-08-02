@@ -1,7 +1,7 @@
-import Home from "./pages/Home";
+import Compare from "@/pages/Compare";
 
 function App() {
-  return <Home />;
+    return <Compare />;
 }
 
 export default App;

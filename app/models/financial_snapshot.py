@@ -1,59 +1,144 @@
 """
-
-Purpose:
-    Stores a company's financial data for a specific reporting date.
-
-Examples:
-    - Annual report for 2025
-    - Quarterly report for Q2 2026
-
+Stores raw financial facts reported by a company for one
+annual or quarterly reporting period.
 """
 
 from datetime import date
 from decimal import Decimal
+from typing import TYPE_CHECKING
 
-from sqlalchemy import Date, ForeignKey, Numeric
+from sqlalchemy import (
+    Date,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
+if TYPE_CHECKING:
+    from app.models.company import Company
+
 
 class FinancialSnapshot(Base):
-    """Stores financial facts reported by a company."""
-
+    """Stores raw financial facts for one reporting period."""
     __tablename__ = "financial_snapshots"
 
-    # Unique database identifier for this financial record
+    # Prevent duplicate reports for the same company and period.
+    __table_args__ = (
+        UniqueConstraint(
+            "company_id",
+            "fiscal_year",
+            "fiscal_period",
+            name="uq_financial_snapshot_company_period",
+        ),
+    )
+
+    # Primary key
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    # Connects snapshot to one company
+    # Company connected to this report
     company_id: Mapped[int] = mapped_column(
         ForeignKey("companies.id"),
+        nullable=False,
         index=True,
     )
 
-    # Date covered by the financial report
-    report_date: Mapped[date] = mapped_column(Date, index=True)
+    # Reporting period
+    fiscal_year: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+    fiscal_period: Mapped[str] = mapped_column(
+        String(10),
+        nullable=False,
+    )
+    report_date: Mapped[date] = mapped_column(
+        Date,
+        nullable=False,
+        index=True,
+    )
+    filing_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True,
+    )
 
-    # Main financial values
-    revenue: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
-    net_income: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
-    free_cash_flow: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
-    earnings_per_share: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
+    # Currency used in the financial report
+    currency: Mapped[str | None] = mapped_column(
+        String(10),
+        nullable=True,
+    )
 
-    # Profitability and balance-sheet ratios
-    gross_margin: Mapped[Decimal | None] = mapped_column(Numeric(8, 4))
-    operating_margin: Mapped[Decimal | None] = mapped_column(Numeric(8, 4))
-    return_on_equity: Mapped[Decimal | None] = mapped_column(Numeric(8, 4))
-    debt_to_equity: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
-    current_ratio: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
+    # Income statement facts
+    revenue: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    gross_profit: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    operating_income: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    net_income: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    earnings_per_share: Mapped[Decimal | None] = mapped_column(
+        Numeric(16, 4),
+        nullable=True,
+    )
 
-    # Valuation ratios
-    price_to_earnings: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
-    price_to_book: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
-    price_to_sales: Mapped[Decimal | None] = mapped_column(Numeric(12, 4))
+    # Balance-sheet facts
+    cash_and_equivalents: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    current_assets: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    total_assets: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    current_liabilities: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    total_liabilities: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    total_debt: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    shareholders_equity: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    shares_outstanding: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
 
-    # Python-side link back to the related company
+    # Cash-flow statement facts
+    operating_cash_flow: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+    capital_expenditure: Mapped[Decimal | None] = mapped_column(
+        Numeric(24, 2),
+        nullable=True,
+    )
+
+    # Connection back to the company
     company: Mapped["Company"] = relationship(
         back_populates="financial_snapshots",
     )

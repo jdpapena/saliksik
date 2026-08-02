@@ -5,6 +5,7 @@ Handles database operations related to companies.
 from sqlalchemy.orm import Session
 
 from app.models.company import Company
+from app.models.financial_snapshot import FinancialSnapshot
 
 
 def create_company(
@@ -87,3 +88,21 @@ def delete_company(
 
     database.delete(company)
     database.commit()
+
+def get_company_financials(
+    database: Session,
+    company_id: int,
+    limit: int | None = 5,
+) -> list[FinancialSnapshot]:
+    
+    """Return annual snapshots, optionally limited to recent years."""
+    query = (
+        database.query(FinancialSnapshot)
+        .filter(FinancialSnapshot.company_id == company_id)
+        .order_by(FinancialSnapshot.fiscal_year.desc())
+    )
+
+    if limit is not None:
+        query = query.limit(limit)
+
+    return query.all()
