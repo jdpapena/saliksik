@@ -1,28 +1,27 @@
-"""
-Lightweight company records used for search and discovery.
-
-A directory entry helps users find a company before its complete
-profile and financial statements have been synchronized.
-"""
+"""Store lightweight company records used for search and discovery."""
 
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.database.base import Base
 
+
 class CompanyDirectory(Base):
-    """Represents one searchable company-directory entry."""
+    """Represent one searchable ticker in the company directory."""
+
     __tablename__ = "company_directory"
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    # Provider-specific company identifier, such as an SEC CIK.
+    # A company may have multiple tickers that share the same SEC CIK.
     cik: Mapped[int] = mapped_column(
         Integer,
         index=True,
     )
 
+    # Each ticker identifies one searchable security entry.
     ticker: Mapped[str] = mapped_column(
         String(20),
         unique=True,
@@ -34,7 +33,7 @@ class CompanyDirectory(Base):
         index=True,
     )
 
-    # These can be enriched later from other providers.
+    # These optional fields can be added on by other providers later.
     exchange: Mapped[str | None] = mapped_column(
         String(50),
         nullable=True,

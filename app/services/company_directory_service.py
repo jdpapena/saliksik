@@ -1,7 +1,6 @@
 """
 Synchronize and search the company discovery directory.
 """
-
 from sqlalchemy import case, or_
 from sqlalchemy.orm import Session
 
@@ -16,7 +15,7 @@ from app.providers.sec_company_directory_adapter import (
 async def sync_sec_company_directory(
     database: Session,
 ) -> int:
-    """Download the SEC company directory."""
+    """Download the SEC directory and save its ticker entries."""
     provider = SecCompanyDirectoryProvider()
     adapter = SecCompanyDirectoryAdapter()
 
@@ -26,18 +25,17 @@ async def sync_sec_company_directory(
         return 0
 
     entries = adapter.normalize(raw_data)
-    saved_count = 0
 
     for entry in entries:
+        # Search by ticker because one company may have several share classes.
         directory_company = (
             database.query(CompanyDirectory)
-            .filter(
-                CompanyDirectory.ticker == entry.ticker
-            )
+            .filter(CompanyDirectory.ticker == entry.ticker)
             .first()
         )
 
         if directory_company is None:
+            # Create a lightweight directory record for autocomplete.
             directory_company = CompanyDirectory(
                 cik=entry.cik,
                 ticker=entry.ticker,
@@ -46,8 +44,11 @@ async def sync_sec_company_directory(
                 country=entry.country,
                 source=entry.source,
             )
+
             database.add(directory_company)
+
         else:
+            # Refresh fields that may have changed in the SEC directory.
             directory_company.cik = entry.cik
             directory_company.company_name = entry.company_name
             directory_company.exchange = entry.exchange
@@ -55,17 +56,16 @@ async def sync_sec_company_directory(
             directory_company.source = entry.source
             directory_company.is_active = True
 
-        saved_count += 1
-
     database.commit()
-    return saved_count
+
+    return len(entries)
 
 def search_company_directory(
     database: Session,
     query: str,
     limit: int = 8,
 ) -> list[CompanyDirectory]:
-    """Search the full company directory by ticker or name."""
+    """Search active directory entries by ticker or company name."""
     normalized_query = query.strip()
 
     if not normalized_query:
@@ -75,6 +75,7 @@ def search_company_directory(
     contains_pattern = f"%{normalized_query}%"
     starts_pattern = f"{normalized_query}%"
 
+    # Show exact ticker matches before broader name matches.
     ranking = case(
         (CompanyDirectory.ticker == upper_query, 0),
         (CompanyDirectory.company_name.ilike(starts_pattern), 1),
@@ -87,12 +88,8 @@ def search_company_directory(
         .filter(
             CompanyDirectory.is_active.is_(True),
             or_(
-                CompanyDirectory.ticker.ilike(
-                    contains_pattern
-                ),
-                CompanyDirectory.company_name.ilike(
-                    contains_pattern
-                ),
+                CompanyDirectory.ticker.ilike(contains_pattern),
+                CompanyDirectory.company_name.ilike(contains_pattern),
             ),
         )
         .order_by(

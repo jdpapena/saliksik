@@ -1,25 +1,26 @@
-"""Database models used by SALIKSIK."""
+"""Export the database models used throughout SALIKSIK."""
 
-from .company import Company
-from .financial_snapshot import FinancialSnapshot
-from .historical_price import HistoricalPrice
-from .dividend import Dividend
-from .news_record import NewsRecord
-from .user import User
-from .investor_profile import InvestorProfile
-from .saved_company import SavedCompany
-from .comparison_history import ComparisonHistory
+from app.models.company import Company
 from app.models.company_directory import CompanyDirectory
+from app.models.comparison_history import ComparisonHistory
+from app.models.dividend import Dividend
+from app.models.financial_snapshot import FinancialSnapshot
+from app.models.historical_price import HistoricalPrice
+from app.models.investor_profile import InvestorProfile
+from app.models.news_record import NewsRecord
+from app.models.saved_company import SavedCompany
+from app.models.user import User
+
 
 __all__ = [
     "Company",
     "CompanyDirectory",
+    "ComparisonHistory",
+    "Dividend",
     "FinancialSnapshot",
     "HistoricalPrice",
-    "Dividend",
-    "NewsRecord",
-    "User",
     "InvestorProfile",
+    "NewsRecord",
     "SavedCompany",
-    "ComparisonHistory",
+    "User",
 ]

@@ -1,15 +1,20 @@
-"""
-Creates the database engine and provides sessions that the application uses to read and write data.
-"""
+"""Create the SQLAlchemy engine and database sessions."""
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "sqlite:///./saliksik.db"
+from app.core.config import settings
+
+# SQLite needs this option because FastAPI can use several threads.
+connect_args = (
+    {"check_same_thread": False}
+    if settings.database_url.startswith("sqlite")
+    else {}
+)
 
 engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False},
+    settings.database_url,
+    connect_args=connect_args,
 )
 
 SessionLocal = sessionmaker(

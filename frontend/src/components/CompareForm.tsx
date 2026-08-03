@@ -35,7 +35,7 @@ export default function CompareForm({
     }
 
     return (
-        <Card>
+        <Card className="overflow-visible">
             <CardHeader>
                 <CardTitle>Choose two companies</CardTitle>
 
@@ -45,7 +45,7 @@ export default function CompareForm({
                 </CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-6">
+            <CardContent className="overflow-visible space-y-6">
                 <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-end">
                     <div className="space-y-2">
                         <label

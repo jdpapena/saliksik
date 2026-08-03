@@ -1,12 +1,18 @@
+"""Provide basic information about the SALIKSIK API."""
+
 from fastapi import APIRouter
 
-router = APIRouter()
+from app.core.config import settings
+
+router = APIRouter(tags=["Root"])
 
 @router.get("/")
-def root():
+def read_root() -> dict[str, str]:
+    """Return basic application information."""
+
     return {
-        "app": "SALIKSIK API",
-        "version": "0.1.0",
+        "app": settings.app_name,
+        "version": settings.app_version,
         "status": "running",
-        "docs": "/docs"
+        "docs": "/docs",
     }

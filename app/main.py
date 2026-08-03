@@ -1,34 +1,32 @@
+"""Create and configure the SALIKSIK FastAPI application."""
+
 from fastapi import FastAPI
-
-from app.routers.root import router as root_router
-from app.routers.health import router as health_router
-from app.routers.stocks import router as stocks_router
-from app.routers.company import router as company_router
-
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.config import settings
+from app.routers.company import router as company_router
+from app.routers.health import router as health_router
+from app.routers.root import router as root_router
 
 app = FastAPI(
-    title="SALIKSIK API",
+    title=settings.app_name,
     description=(
-        "An AI-powered investment intelligence platform that helps "
-        "beginner investors research stocks, manage portfolios, "
-        "and make informed investment decisions."
+        "A financial research platform that helps beginner investors "
+        "discover and compare companies using reported financial facts."
     ),
-    version="0.1.0",
+    version=settings.app_version,
 )
 
+# Allow the configured frontend to access the API.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-    ],
+    allow_origins=[settings.frontend_url],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Register the API.
 app.include_router(root_router)
 app.include_router(health_router)
-app.include_router(stocks_router)
 app.include_router(company_router)

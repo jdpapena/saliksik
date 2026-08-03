@@ -78,7 +78,7 @@ export default function CompanyAutocomplete({
             />
 
             {open && (
-                <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md">
+                <div className="absolute left-0 top-full z-[100] mt-2 max-h-72 w-full overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-lg">
                     {loading && (
                         <p className="px-3 py-3 text-sm text-muted-foreground">
                             Searching…

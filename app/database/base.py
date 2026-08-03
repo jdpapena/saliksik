@@ -1,12 +1,6 @@
-"""Shared SQLAlchemy base class.
-
-All database models inherit from Base so SQLAlchemy can track
-and create their tables consistently.
-"""
+"""Define the shared SQLAlchemy base class."""
 
 from sqlalchemy.orm import DeclarativeBase
 
 class Base(DeclarativeBase):
-    """Parent class for every database model."""
-
-    pass
+    """Parent class inherited by every database model."""

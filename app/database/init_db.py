@@ -1,27 +1,26 @@
-"""
-Creates all database tables defined in the SQLAlchemy models.
-"""
+"""Create all database tables registered with SQLAlchemy."""
 
-# Local imports
 from app.database import Base, engine
 
-# Import all models so SQLAlchemy knows they exist.
+# Import each model so SQLAlchemy includes it in the metadata.
 from app.models import (
     Company,
     CompanyDirectory,
+    ComparisonHistory,
+    Dividend,
     FinancialSnapshot,
     HistoricalPrice,
-    Dividend,
-    NewsRecord,
-    User,
     InvestorProfile,
+    NewsRecord,
     SavedCompany,
-    ComparisonHistory,
+    User,
 )
 
 def create_database() -> None:
-    """Create all database tables."""
+    """Create database tables that do not already exist."""
+
     Base.metadata.create_all(bind=engine)
+
 
 if __name__ == "__main__":
     create_database()
