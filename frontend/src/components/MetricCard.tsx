@@ -41,6 +41,22 @@ function formatValue(value: string | null, unit: string): string {
     return `${number.toLocaleString()} ${unit}`;
 }
 
+function getBarWidth(value: string | null, otherValue: string | null): string {
+    if (value === null) {
+        return "0%";
+    }
+
+    const current = Math.abs(Number(value));
+    const other = otherValue === null ? 0 : Math.abs(Number(otherValue));
+    const largest = Math.max(current, other);
+
+    if (largest === 0) {
+        return "0%";
+    }
+
+    return `${(current / largest) * 100}%`;
+}
+
 export default function MetricCard({
     metric,
     companyAName,
@@ -55,25 +71,59 @@ export default function MetricCard({
             </CardHeader>
 
             <CardContent className="space-y-5">
-                <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-lg border bg-muted/30 p-4">
-                        <p className="text-sm font-medium text-muted-foreground">
-                            {companyAName}
-                        </p>
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-4">
+                            <span className="text-sm font-medium text-muted-foreground">
+                                {companyAName}
+                            </span>
 
-                        <p className="mt-2 text-2xl font-semibold tracking-tight">
-                            {formatValue(metric.company_a_value, metric.unit)}
-                        </p>
+                            <strong className="text-lg">
+                                {formatValue(
+                                    metric.company_a_value,
+                                    metric.unit,
+                                )}
+                            </strong>
+                        </div>
+
+                        <div className="h-3 overflow-hidden rounded-full bg-muted">
+                            <div
+                                className="h-full rounded-full bg-primary/75 transition-[width] duration-500"
+                                style={{
+                                    width: getBarWidth(
+                                        metric.company_a_value,
+                                        metric.company_b_value,
+                                    ),
+                                }}
+                            />
+                        </div>
                     </div>
 
-                    <div className="rounded-lg border bg-muted/30 p-4">
-                        <p className="text-sm font-medium text-muted-foreground">
-                            {companyBName}
-                        </p>
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-4">
+                            <span className="text-sm font-medium text-muted-foreground">
+                                {companyBName}
+                            </span>
 
-                        <p className="mt-2 text-2xl font-semibold tracking-tight">
-                            {formatValue(metric.company_b_value, metric.unit)}
-                        </p>
+                            <strong className="text-lg">
+                                {formatValue(
+                                    metric.company_b_value,
+                                    metric.unit,
+                                )}
+                            </strong>
+                        </div>
+
+                        <div className="h-3 overflow-hidden rounded-full bg-muted">
+                            <div
+                                className="h-full rounded-full bg-primary/45 transition-[width] duration-500"
+                                style={{
+                                    width: getBarWidth(
+                                        metric.company_b_value,
+                                        metric.company_a_value,
+                                    ),
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
 
