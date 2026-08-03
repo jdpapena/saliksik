@@ -3,10 +3,9 @@ Handles database operations related to companies.
 """
 
 from sqlalchemy.orm import Session
-
+from sqlalchemy import or_
 from app.models.company import Company
 from app.models.financial_snapshot import FinancialSnapshot
-
 
 def create_company(
     database: Session,
@@ -24,7 +23,6 @@ def create_company(
     employees: int,
 ) -> Company:
     """Create and save a company in the database."""
-
     company = Company(
         ticker=ticker,
         name=name,
@@ -94,7 +92,6 @@ def get_company_financials(
     company_id: int,
     limit: int | None = 5,
 ) -> list[FinancialSnapshot]:
-    
     """Return annual snapshots, optionally limited to recent years."""
     query = (
         database.query(FinancialSnapshot)
@@ -106,3 +103,31 @@ def get_company_financials(
         query = query.limit(limit)
 
     return query.all()
+
+def search_companies(
+    database: Session,
+    query: str,
+    limit: int = 8,
+) -> list[Company]:
+    """Search cached companies by ticker or company name."""
+    normalized_query = query.strip()
+
+    if not normalized_query:
+        return []
+
+    search_pattern = f"%{normalized_query}%"
+
+    return (
+        database.query(Company)
+        .filter(
+            or_(
+                Company.ticker.ilike(search_pattern),
+                Company.name.ilike(search_pattern),
+            )
+        )
+        .order_by(
+            Company.ticker.asc(),
+        )
+        .limit(limit)
+        .all()
+    )

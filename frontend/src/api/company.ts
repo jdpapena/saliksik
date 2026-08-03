@@ -11,3 +11,31 @@ export async function compareCompanies(tickerA: string, tickerB: string) {
 
     return response.json();
 }
+
+export interface CompanySearchResult {
+    ticker: string;
+    name: string;
+    exchange: string;
+}
+
+export async function searchCompanies(
+    query: string,
+): Promise<CompanySearchResult[]> {
+    const normalizedQuery = query.trim();
+
+    if (!normalizedQuery) {
+        return [];
+    }
+
+    const response = await fetch(
+        `${API_BASE}/companies/search?query=${encodeURIComponent(
+            normalizedQuery,
+        )}`,
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to search companies.");
+    }
+
+    return response.json();
+}

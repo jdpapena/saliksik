@@ -6,11 +6,13 @@ from app.database.dependencies import get_db
 from app.schemas.company import CompanyResponse
 from app.schemas.financial_snapshot import FinancialSnapshotResponse
 from app.schemas.company_comparison import CompanyComparisonResponse
+from app.schemas.company_search import CompanySearchResult
 from app.services.comparison_service import compare_companies
 from app.services.company_service import (
     get_all_companies,
     get_company_by_ticker,
-    get_company_financials
+    get_company_financials,
+    search_companies,
 )
 from app.services.company_data_service import ensure_company_data
 from app.services.sync_service import sync_company_from_sec
@@ -143,6 +145,31 @@ async def read_company_comparison(
         )
 
     return comparison
+
+@router.get(
+    "/search",
+    response_model=list[CompanySearchResult],
+)
+def search_company_directory(
+    query: str,
+    limit: int = 8,
+    database: Session = Depends(get_db),
+):
+    """Return cached companies matching a ticker or name."""
+    if not query.strip():
+        return []
+
+    if limit < 1 or limit > 20:
+        raise HTTPException(
+            status_code=400,
+            detail="Limit must be between 1 and 20.",
+        )
+
+    return search_companies(
+        database=database,
+        query=query,
+        limit=limit,
+    )
 
 @router.get(
     "/{ticker}",

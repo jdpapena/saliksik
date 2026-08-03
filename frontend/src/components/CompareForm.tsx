@@ -8,7 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import CompanyAutocomplete from "@/components/CompanyAutocomplete";
 import { Separator } from "@/components/ui/separator";
 
 interface CompareFormProps {
@@ -55,15 +55,12 @@ export default function CompareForm({
                             First company
                         </label>
 
-                        <Input
+                        <CompanyAutocomplete
                             id="ticker-a"
+                            label="First company"
                             value={tickerA}
-                            onChange={(event) =>
-                                setTickerA(event.target.value.toUpperCase())
-                            }
-                            placeholder="AAPL"
-                            maxLength={10}
-                            autoComplete="off"
+                            placeholder="Search Apple or AAPL"
+                            onChange={setTickerA}
                         />
                     </div>
 
@@ -81,15 +78,12 @@ export default function CompareForm({
                             Second company
                         </label>
 
-                        <Input
+                        <CompanyAutocomplete
                             id="ticker-b"
+                            label="Second company"
                             value={tickerB}
-                            onChange={(event) =>
-                                setTickerB(event.target.value.toUpperCase())
-                            }
-                            placeholder="MSFT"
-                            maxLength={10}
-                            autoComplete="off"
+                            placeholder="Search Microsoft or MSFT"
+                            onChange={setTickerB}
                         />
                     </div>
                 </div>
