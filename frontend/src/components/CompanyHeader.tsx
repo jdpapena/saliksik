@@ -37,7 +37,9 @@ export default function CompanyHeader({
                 </div>
 
                 <div>
-                    <CardTitle className="text-2xl">{name}</CardTitle>
+                    <CardTitle className="break-words text-xl sm:text-2xl">
+                        {name}
+                    </CardTitle>
 
                     <CardDescription className="mt-2">
                         Report date: {formatDate(reportDate)}

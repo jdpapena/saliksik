@@ -73,12 +73,12 @@ export default function MetricCard({
             <CardContent className="space-y-5">
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-4">
+                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                             <span className="text-sm font-medium text-muted-foreground">
                                 {companyAName}
                             </span>
 
-                            <strong className="text-lg">
+                            <strong className="break-all text-lg sm:text-xl">
                                 {formatValue(
                                     metric.company_a_value,
                                     metric.unit,
@@ -100,12 +100,12 @@ export default function MetricCard({
                     </div>
 
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-4">
+                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                             <span className="text-sm font-medium text-muted-foreground">
                                 {companyBName}
                             </span>
 
-                            <strong className="text-lg">
+                            <strong className="break-all text-lg sm:text-xl">
                                 {formatValue(
                                     metric.company_b_value,
                                     metric.unit,

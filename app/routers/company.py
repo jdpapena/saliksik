@@ -12,6 +12,7 @@ from app.services.company_service import (
     get_company_by_ticker,
     get_company_financials
 )
+from app.services.company_data_service import ensure_company_data
 from app.services.sync_service import sync_company_from_sec
 from app.services.financial_sync_service import (
     sync_annual_financials_from_sec,
@@ -107,25 +108,26 @@ def read_company_financials(
     "/compare/{ticker_a}/{ticker_b}",
     response_model=CompanyComparisonResponse,
 )
-def read_company_comparison(
+async def read_company_comparison(
     ticker_a: str,
     ticker_b: str,
     database: Session = Depends(get_db),
 ):
-    """Compare two companies using a shared fiscal year."""
-    company_a = get_company_by_ticker(
-        database,
-        ticker_a.upper(),
+    """Compare two companies and synchronize missing data automatically."""
+    company_a = await ensure_company_data(
+        database=database,
+        ticker=ticker_a,
     )
-    company_b = get_company_by_ticker(
-        database,
-        ticker_b.upper(),
+
+    company_b = await ensure_company_data(
+        database=database,
+        ticker=ticker_b,
     )
 
     if company_a is None or company_b is None:
         raise HTTPException(
             status_code=404,
-            detail="One or both companies were not found.",
+            detail="One or both companies were not found in SEC EDGAR.",
         )
 
     comparison = compare_companies(

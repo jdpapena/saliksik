@@ -4,6 +4,7 @@ import { compareCompanies } from "../api/company";
 import CompanyHeader from "@/components/CompanyHeader";
 import CompareForm from "../components/CompareForm";
 import MetricCard from "../components/MetricCard";
+import ComparisonSkeleton from "@/components/ComparisonSkeleton";
 import type { CompanyComparison } from "../types/comparison";
 
 export default function Compare() {
@@ -16,6 +17,7 @@ export default function Compare() {
     async function handleCompare(tickerA: string, tickerB: string) {
         setLoading(true);
         setError(null);
+        setComparison(null);
 
         try {
             const result = await compareCompanies(tickerA, tickerB);
@@ -34,7 +36,7 @@ export default function Compare() {
     return (
         <main className="min-h-screen bg-[oklch(0.95_0.015_78)] text-foreground">
             <section className="border-b bg-[oklch(0.91_0.03_72)]">
-                <div className="mx-auto max-w-6xl px-6 py-16 text-center">
+                <div className="mx-auto max-w-6xl px-4 py-12 text-center sm:px-6 sm:py-16">
                     <p className="mb-3 text-sm font-semibold tracking-[0.25em] text-primary">
                         SALIKSIK
                     </p>
@@ -50,7 +52,7 @@ export default function Compare() {
                 </div>
             </section>
 
-            <section className="mx-auto max-w-6xl space-y-8 px-6 py-10">
+            <section className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6 sm:py-10">
                 <CompareForm onCompare={handleCompare} loading={loading} />
 
                 {error && (
@@ -59,7 +61,9 @@ export default function Compare() {
                     </div>
                 )}
 
-                {comparison && (
+                {loading && <ComparisonSkeleton />}
+
+                {comparison && !loading && (
                     <>
                         <div className="grid gap-6 md:grid-cols-2">
                             <CompanyHeader
