@@ -14,8 +14,9 @@ export async function compareCompanies(tickerA: string, tickerB: string) {
 
 export interface CompanySearchResult {
     ticker: string;
-    name: string;
-    exchange: string;
+    company_name: string;
+    exchange: string | null;
+    source: string;
 }
 
 export async function searchCompanies(

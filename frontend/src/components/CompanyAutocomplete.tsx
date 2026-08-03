@@ -102,7 +102,7 @@ export default function CompanyAutocomplete({
                             >
                                 <span>
                                     <span className="block font-medium">
-                                        {company.name}
+                                        {company.company_name}
                                     </span>
 
                                     <span className="block text-xs text-muted-foreground">
@@ -110,8 +110,14 @@ export default function CompanyAutocomplete({
                                     </span>
                                 </span>
 
-                                <span className="text-sm font-semibold">
-                                    {company.ticker}
+                                <span className="text-right">
+                                    <span className="block text-sm font-semibold">
+                                        {company.ticker}
+                                    </span>
+
+                                    <span className="block text-xs text-muted-foreground">
+                                        {company.source}
+                                    </span>
                                 </span>
                             </button>
                         ))}

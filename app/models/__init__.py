@@ -9,9 +9,11 @@ from .user import User
 from .investor_profile import InvestorProfile
 from .saved_company import SavedCompany
 from .comparison_history import ComparisonHistory
+from app.models.company_directory import CompanyDirectory
 
 __all__ = [
     "Company",
+    "CompanyDirectory",
     "FinancialSnapshot",
     "HistoricalPrice",
     "Dividend",

@@ -8,6 +8,7 @@ from app.database import Base, engine
 # Import all models so SQLAlchemy knows they exist.
 from app.models import (
     Company,
+    CompanyDirectory,
     FinancialSnapshot,
     HistoricalPrice,
     Dividend,

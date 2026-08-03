@@ -1,10 +1,11 @@
 """
-Schemas for company search results.
+Schemas for company directory search results.
 """
 
 from pydantic import BaseModel
 
 class CompanySearchResult(BaseModel):
     ticker: str
-    name: str
-    exchange: str
+    company_name: str
+    exchange: str | None
+    source: str

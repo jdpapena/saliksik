@@ -19,6 +19,9 @@ from app.services.sync_service import sync_company_from_sec
 from app.services.financial_sync_service import (
     sync_annual_financials_from_sec,
 )
+from app.services.company_directory_service import (
+    search_company_directory,
+)
 
 router = APIRouter(
     prefix="/companies",
@@ -150,12 +153,12 @@ async def read_company_comparison(
     "/search",
     response_model=list[CompanySearchResult],
 )
-def search_company_directory(
+def search_company_directory_endpoint(
     query: str,
     limit: int = 8,
     database: Session = Depends(get_db),
 ):
-    """Return cached companies matching a ticker or name."""
+    """Search the complete SEC company directory."""
     if not query.strip():
         return []
 
@@ -165,7 +168,7 @@ def search_company_directory(
             detail="Limit must be between 1 and 20.",
         )
 
-    return search_companies(
+    return search_company_directory(
         database=database,
         query=query,
         limit=limit,
