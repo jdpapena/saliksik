@@ -1,193 +1,173 @@
-# SALIKSIK - AI-Powered Investment Intelligence Platform
+# SALIKSIK - Financial Research Platform
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.116-green)
+![React](https://img.shields.io/badge/React-19-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-A full-stack stock analysis platform engineered to help beginner investors evaluate publicly traded companies using quantitative financial metrics. The application retrieves market data, analyzes multiple investment factors, and presents an easy-to-understand assessment with visual ratings, company fundamentals, and investment insights.
+A full-stack financial research platform engineered to help beginner investors discover and compare publicly traded companies using reported SEC financial data. The application automatically synchronizes company information, annual financial statements, and presents side-by-side comparisons without relying on subjective scores or investment recommendations.
 
-SALIKSIK was built to practice designing a complete software system - from backend API development to frontend visualization - while applying software engineering principles such as modular architecture, RESTful APIs, strong typing, and maintainable code organization.
+This project was built to practice full-stack software engineering by integrating external financial data sources, designing a layered backend architecture, and developing a responsive frontend that simplifies company research for new investors.
 
 ---
 
 ## Features
-- **Fundamental Analysis:** Evaluates a company's financial health, growth, valuation, risk, and market sentiment.
-- **Weighted Scoring System:** Combines multiple investment factors into a normalized overall score and star rating.
-- **Company Snapshot:** Displays key company information including sector, industry, country, and market capitalization.
-- **Investment Summary:** Automatically generates strengths, weaknesses, and an overall company assessment.
-- **Responsive User Interface:** Clean React interface designed for beginner investors.
-- **REST API Backend:** FastAPI-powered backend serving structured investment analysis.
+
+- **Automatic Company Synchronization:** Downloads and stores company information directly from the SEC EDGAR database when requested.
+- **Automatic Financial Synchronization:** Retrieves annual reported financial facts and caches them locally for faster future access.
+- **Company Directory Search:** Searches more than 10,000 SEC-listed companies with real-time autocomplete.
+- **Side-by-Side Financial Comparison:** Displays reported financial metrics for two companies using the latest available fiscal year.
+- **Educational Metric Explanations:** Explains financial definitions, formulas, and why each metric matters to beginner investors.
+- **Local Data Caching:** Previously synchronized companies are stored locally to reduce unnecessary API requests and improve performance.
 
 ---
 
 ## Technologies
-- **Backend:** Python, FastAPI, Pydantic, Uvicorn, yfinance
-- **Frontend:** React, TypeScript, Vite, Axios, Tailwind CSS
+
+- **Backend:** Python, FastAPI, SQLAlchemy ORM, SQLite (Development), PostgreSQL Ready, Pydantic, HTTPX
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS, shadcn/ui
+- **External Data:** SEC EDGAR Company Facts API, SEC Company Directory
 
 ---
 
-## How It Works
-The application processes stock analysis in five stages:
-1. **Market Data Retrieval**
-   - Downloads company fundamentals and market information using Yahoo Finance.
+## How it works
 
-2. **Financial Evaluation**
-   - Calculates category scores for:
-     - Financial Health
-     - Growth
-     - Valuation
-     - Risk
-     - Market Sentiment
+The application processes company data in five steps:
 
-3. **Overall Assessment**
-   - Applies weighted scoring to generate an overall investment score, star rating, and qualitative assessment.
-
-4. **Summary Generation**
-   - Produces strengths, weaknesses, and a beginner-friendly company overview.
-
-5. **Frontend Visualization**
-   - Displays the analysis through reusable React components with intuitive visual indicators.
+1. **Searches the SEC Directory:** Looks up companies from a locally cached SEC directory containing more than 10,000 publicly traded companies.
+2. **Synchronizes Company Information:** Downloads company metadata from SEC EDGAR if it has not been synchronized previously.
+3. **Synchronizes Financial Statements:** Retrieves annual reported financial facts and stores them locally for future requests.
+4. **Processes Financial Metrics:** Extracts standardized financial metrics and aligns both companies using a shared fiscal year.
+5. **Displays Comparison:** Presents reported financial values together with educational explanations for each metric.
 
 ---
 
-## Project Structure
+## Installation & Usage
 
-```
-SALIKSIK
-├── backend
-│   ├── app
-│   ├── routers
-│   ├── services
-│   ├── models
-│   └── main.py
-│
-├── frontend
-│   ├── src
-│   │   ├── components
-│   │   ├── pages
-│   │   ├── api
-│   │   ├── types
-│   │   └── assets
-│   └── package.json
-│
-└── README.md
-```
-
----
-
-## Installation
-
-### Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/jdpapena/saliksik.git
 cd saliksik
 ```
 
----
-
-## Backend Setup
+### 2. Install Backend Dependencies
 
 ```bash
-cd backend
-
 uv sync
+```
 
+### 3. Configure Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+DATABASE_URL=sqlite:///./saliksik.db
+SEC_USER_AGENT=SALIKSIK your-email@example.com
+FRONTEND_URL=http://localhost:5173
+```
+
+### 4. Start the Backend
+
+```bash
 uv run uvicorn app.main:app --reload
 ```
 
-Backend runs on:
-
-```
-http://127.0.0.1:8000
-```
-
----
-
-## Frontend Setup
+### 5. Start the Frontend
 
 ```bash
 cd frontend
-
 npm install
-
 npm run dev
-```
-
-Frontend runs on:
-
-```
-http://localhost:5173
-```
-
----
-
-## Environment Variables
-
-Create a `.env` file inside the frontend directory.
-
-```env
-VITE_API_URL=http://127.0.0.1:8000
 ```
 
 ---
 
 ## Sample Workflow
 
-```text
-User enters ticker/symbol
-        │
-        ▼
-React Frontend
-        │
-        ▼
-FastAPI REST API
-        │
-        ▼
-Yahoo Finance
-        │
-        ▼
-Scoring Engine
-        │
-        ▼
-Summary Generator
-        │
-        ▼
-React Dashboard
+```
+User enters:
+
+AAPL
+MSFT
+
+↓
+
+Company Directory Search
+
+↓
+
+Automatic SEC Synchronization
+
+↓
+
+Financial Synchronization
+
+↓
+
+Metric Processing
+
+↓
+
+Side-by-Side Comparison
 ```
 
 ---
 
-## Example Analysis
-
-### Overall Assessment
+## Project Structure
 
 ```
-Overall Score : 84 / 100
-Rating        : ★★★★☆
-Assessment    : Good
-```
-
-### Categories
-
-```
-Financial Health : ★★★★★
-Growth           : ★★★★☆
-Valuation        : ★★☆☆☆
-Risk             : ★★★★☆
-Market Sentiment : ★★★☆☆
+saliksik/
+│
+├── app/
+│   ├── database/
+│   ├── models/
+│   ├── providers/
+│   ├── routers/
+│   ├── schemas/
+│   ├── services/
+│   └── main.py
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── tests/
+├── start.sh
+├── pyproject.toml
+└── README.md
 ```
 
 ---
 
 ## Future Improvements
-- Historical stock price charts
-- Stock comparison dashboard
-- Watchlist functionality
-- Search history
-- Latest financial news integration
-- Portfolio tracking
+
+Version 2 of SALIKSIK is planned to include: (coming soon)
+
+- Investor profile questionnaire
+- Personalized company recommendations
+- Growth vs. dividend preference analysis
+- Long-term vs. short-term investing goals
+- AI-powered financial assistant
 - Philippine Stock Exchange support
+- Portfolio tracking
 
 ---
 
 ## Disclaimer
-SALIKSIK is intended for educational and research purposes only. It does not provide financial advice or investment recommendations. Users should conduct their own due diligence before making investment decisions.
+
+SALIKSIK is an educational and personal portfolio project developed to demonstrate full-stack software engineering, financial data integration, and application design.
+
+The information presented is derived from publicly available SEC filings and is intended solely for research and educational purposes.
+
+This application:
+
+- Does **not** provide financial, investment, legal, or tax advice.
+- Does **not** recommend buying, selling, or holding any security.
+- Should **not** be used as the sole basis for making investment decisions.
+- Is intended for **personal and non-commercial use**.
+
+Users are encouraged to conduct their own research and consult a qualified financial professional before making investment decisions.
 
 ---
